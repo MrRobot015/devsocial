@@ -1,0 +1,68 @@
+{% load static %}
+
+<header class="header" style="background-color: rgb(32, 2, 39)">
+    
+    <div class="container container--narrow" style="position: relative;">
+        <!-- logo -->
+        <a href="{% url 'profiles'%}" class="header__logo">
+            <div style="display: inline flow;">
+                <img src="{% static 'images/icon.svg' %}" alt="DevSearch Logo" style="max-width: 40px;" />
+                <span
+                    style="color: rgb(221, 228, 235); font-size: large; font-weight: bold; background-color: rgb(17, 1, 20);"
+                    class="tag tag--pill">
+                    <span style="font-weight: bolder; font-size: x-large; color: rgb(32, 35, 214)">D</span>ev<span
+                        style="font-weight: bolder; font-size: x-large; color: rgb(32, 35, 214)">S</span>ocial<span
+                        style="font-weight: bolder; font-size: x-large; color: rgb(32, 35, 214)">N</span>et</span>
+            </div>
+        </a>
+        <nav class="header__nav"  >
+            <input type="checkbox" id="responsive-menu"  style="position: relative;"/>
+            <label for="responsive-menu" class="toggle-menu">
+                <span>Menu</span>
+                <div class="toggle-menu__lines" ></div>
+            </label>
+            <ul class="header__menu" style="background-color: rgb(32, 2, 39);">
+                <li class="header__menuItem"><a href="{% url 'profiles' %}">Developers</a></li>
+                <li class="header__menuItem">
+                    <a href="{% url 'projects' %}">Projects</a>
+                </li>
+                
+                
+                {% if request.user.is_authenticated %}
+                <li class="header__menuItem"><a href="{% url 'inbox' %}">Inbox</a></li>
+                <!-- link to the user account -->
+                <li class="header__menuItem">
+                    <a href="{% url 'account' %}">
+                        <div>
+                            <img src="{{ request.user.profile.profile_image.url }}" class="avatar" style="height: 4rem; width: 4rem; border-color: rgb(140, 73, 202); margin-left: 5px;" />
+                            <p style="font-size: small; color:beige; margin-top: -10px;">account</p>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="header__menuItem">
+                    <a href="{% url 'logout' %}" class="btn btn--sub"
+                        style="background-color: rgb(17, 1, 20);">Logout</a>
+                </li>
+                {% else %}
+                <li class="header__menuItem">
+                    <a href="{% url 'login' %}" class="btn btn--sub"
+                        style="background-color: rgb(17, 1, 20);">Login/Sign
+                        Up</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        
+    </div>
+
+    <!-- alert messages -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class=" al--{{ message.tags }}">
+                {{ message }}
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+</header>

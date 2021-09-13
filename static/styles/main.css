@@ -1,0 +1,49 @@
+/* The alert message box */
+
+.al--error {
+  padding: 10px;
+  border-radius: 30px;
+  background-color: #fc0202a8; /* Red */
+  color: rgb(185, 185, 185);
+  text-align: center;
+  position: absolute;
+  margin-left: 500px;
+
+}
+.al--success {
+  padding: 10px;
+  border-radius: 30px;
+  background-color: #06f8127e; /* Red */
+  color: rgb(185, 185, 185);
+  text-align: center;
+  position: absolute;
+  margin-left: 500px;
+}
+
+.al--info {
+  padding: 10px;
+  border-radius: 30px;
+  background-color: #8a92ff7c; /* Red */
+  color: rgb(185, 185, 185);
+  text-align: center;
+  position: absolute;
+  margin-left: 500px;
+}
+
+/* The close button */
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+  color: black;
+}
+

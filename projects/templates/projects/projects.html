@@ -1,0 +1,78 @@
+{% extends 'main.html' %}
+{% block content %}
+
+<!-- Main Section -->
+<main class="projects">
+    <section class="hero-section text-center" style="background-color: rgba(25, 25, 26, 0.521);">
+        <div class="container container--narrow">
+
+            <div class="hero-section__box">
+
+                <h2 style="color: rgb(233, 231, 245);">Search for <span
+                        style="color: rgb(222, 224, 233)">Projects</span></h2>
+            </div>
+
+            <div class="hero-section__search">
+
+                <form id="searchForm" class="form" action="{% url 'projects' %}" method="get">
+                    <div class="form__field">
+                        <label for="formInput#search">Search By Projects </label>
+                        <input class="input input--text" id="formInput#search" type="text" name="search_query"
+                            placeholder="Search by Project Title" value="{{ search_query }}"/>
+                    </div>
+
+                    <input class="btn btn--main btn--lg" type="submit" value="Search"
+                        style="background-color: rgb(32, 2, 39);" />
+
+                </form>
+
+            </div>
+          
+        </div>
+
+    </section>
+
+    <!-- Search Result: DevList -->
+    <section class="projectsList">
+
+        <div class="container">
+            <div class="grid grid--three">
+                {% for project in projects %}
+                <div class="column">
+
+                    <div class="card project ">
+                        <a href="{% url 'project' project.id %}" class="project" >
+                            <img class="project__thumbnail" src="{{ project.featured_image.url }}"
+                                alt="project thumbnail" />
+                            <div class="card__body">
+                                <h3 class="project__title">{{ project.title }}</h3>
+                                <p><a class="project__author" href="{% url 'user-profile' project.owner.id %}">{{ project.owner.name }}</a></p>
+                                <p class="project--rating">
+                                    <span style="font-weight: bold;">{{ project.vote_ratio }}%</span> Postitive
+                                    Feedback ({{ project.vote_total }} Vote{{ project.vote_total | pluralize:"s" }})
+                                </p>
+                                <div class="project__tags">
+                                    {% for tag in project.tags.all %}
+                                    <span class="tag tag--pill" style="background-color: rgb(113, 10, 136);">
+                                        <small>{{ tag }}</small>
+                                    </span>
+                                    {% endfor %}
+                                </div>
+
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+                {% endfor %}
+
+
+            </div>
+        </div>
+    </section>
+
+    {% include 'pagination.html' with queryset=projects custom_range=custom_range %}
+</main>
+
+
+{% endblock %}

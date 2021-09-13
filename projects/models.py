@@ -1,0 +1,80 @@
+from django.db import models
+import uuid
+from users.models import Profile
+
+from django.db.models.expressions import Value
+from django.db.models.fields.related import create_many_to_many_intermediary_model
+
+    #=======projects app DB table no(1)=======#
+class Project(models.Model):
+    owner = models.ForeignKey(Profile, null=True , blank=True, on_delete=models.SET_NULL )
+    title = models.CharField(max_length=200)
+    description = models.TextField(null=True , blank=True)
+    featured_image= models.ImageField(null=True , blank=True , default="default.jpg")
+    demo_link = models.CharField(max_length=2000 , null=True , blank=True)
+    source_link = models.CharField(max_length=2000 , null=True , blank=True)
+    tags = models.ManyToManyField('tag' , blank=True)
+    vote_total = models.IntegerField(default=0 , null=True , blank=True)
+    vote_ratio = models.IntegerField(default=0 , null=True , blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(default=uuid.uuid4 , unique=True , primary_key=True ,editable=False)
+
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering =['-vote_ratio', '-vote_total', 'title']
+
+    @property
+    def reviewers(self):
+        quertset = self.review_set.all().values_list('owner__id',flat=True)
+        return quertset
+
+    @property
+    def getVoteCount(self):
+    #this method update the the review total and ratio after submiting a new review
+        reviews = self.review_set.all()
+        upVote = reviews.filter(value='up').count()
+        totalVotes = reviews.count()
+        ratio = (upVote / totalVotes) * 100
+
+        self.vote_ratio = ratio
+        self.vote_total = totalVotes
+        self.save()
+
+    #=======projects app DB table no(3)=======#
+class Review(models.Model):
+
+    VOTE_TYPE=(
+        ('up' , 'Up Vote'),
+        ('down' , 'Dwon vote')
+    )
+
+    owner = models.ForeignKey(Profile, null=True , blank=True , on_delete=models.CASCADE)
+    project = models.ForeignKey(Project , on_delete=models.CASCADE)
+    body = models.TextField(null=True , blank=True)
+    value = models.CharField(max_length=200 , choices=VOTE_TYPE)
+    created = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(default=uuid.uuid4 , unique=True , primary_key=True ,editable=False)
+
+    class Meta:
+
+        unique_together = [["owner","project"]]
+
+
+    def __str__(self):
+        return self.value
+
+    
+
+
+    #=======projects app DB table no(3)=======#
+class Tag(models.Model):
+
+    name = models.CharField(max_length=200)
+    created = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(default=uuid.uuid4 , unique=True , primary_key=True ,editable=False)
+
+    def __str__(self):
+        return self.name
