@@ -13,7 +13,7 @@ from .utils import searchProfiles, paginateProfiles
 # =========================================================
 def loginUser(request):
     """login process and authenticate and validation"""
-    page = "login"
+    
     if request.user.is_authenticated:
         return redirect("profiles")
 
